@@ -16,12 +16,12 @@ print('loaded libraries')
 
 dir_path = "/pub/hfdrake/datasets/CM4_MHW_blobs/"
 ds = xr.open_dataset(f"{dir_path}/data/ocean_daily_cmip.01860101-01901231.tos.nc", chunks={'time':100})
-mt_path = "/pub/mariant3/VeryWarmWaterMasses/saved_blob_output_ncfiles"
+mt_path = "/pub/mariant3/WarmWaterMasses/02_tracking-mhws"
 
 print('loaded data')
 
 start = 111
-end = 341
+end = 300
 
 print('defined start & end')
 
@@ -30,7 +30,7 @@ len_ds =np.array(len_ds)
 
 for i in range(1, len_ds+1):
     print(i)
-    binary_out = ds['tos'].sel(xh = slice(-138, 0), yh = slice(8, 49)).isel(time = slice(start,end)) > 29
+    binary_out = ds['tos'].isel(time = slice(start,end)) > 29
     mask = xr.ones_like(binary_out.isel(time=0))
     print('binary_out & mask')
     Tracker = ocetrac.Tracker(binary_out, mask, radius=2, min_size_quartile=0.75, timedim='time', xdim='xh', ydim='yh', positive=True)
@@ -41,7 +41,7 @@ for i in range(1, len_ds+1):
     date_e = f"{e.year.values:0004}-{e.month.values:02}-{e.day.values:02}"
     print(date_d)
     print(date_e)
-    blobs.to_netcdf(f'{mt_path}/blobs_{date_d}_{date_e}.nc', mode = 'w')
+    blobs.to_netcdf(f'{mt_path}/{date_d}_{date_e}_blobs.nc', mode = 'w')
     print('saved netcdf')
     start+=365
     end+=365
