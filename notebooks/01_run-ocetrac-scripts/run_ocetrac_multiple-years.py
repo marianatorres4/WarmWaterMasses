@@ -20,8 +20,8 @@ mt_path = "/pub/mariant3/WarmWaterMasses/02_tracking-mhws"
 
 print('loaded data')
 
-start = 111
-end = 300
+start = 1217
+end = 1388
 
 print('defined start & end')
 
@@ -33,8 +33,10 @@ for i in range(1, len_ds+1):
     binary_out = ds['tos'].isel(time = slice(start,end)) > 29
     mask = xr.ones_like(binary_out.isel(time=0))
     print('binary_out & mask')
-    Tracker = ocetrac.Tracker(binary_out, mask, radius=2, min_size_quartile=0.75, timedim='time', xdim='xh', ydim='yh', positive=True)
+    Tracker = ocetrac.Tracker(binary_out, mask, radius=3, min_size_quartile=0.75, timedim='time', xdim='xh', ydim='yh', positive=True)
+    print('Tracker')
     blobs = Tracker.track()
+    print('blobs')
     d = ds['tos'].isel(time = start).time.dt
     e = ds['tos'].isel(time = end).time.dt
     date_d = f"{d.year.values:0004}-{d.month.values:02}-{d.day.values:02}"

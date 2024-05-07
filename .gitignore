@@ -1,0 +1,6 @@
+gitignore2/
+data/
+.ipynb_checkpoints
+gitignore3sub/
+WMT_analysis/
+WMT_data/
