@@ -47,6 +47,3 @@ for i in range(1, len_ds+1):
     print('saved netcdf')
     start+=365
     end+=365
-
-
-

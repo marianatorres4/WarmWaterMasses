@@ -32,53 +32,60 @@ while task <=6:
         data = ds
         radius = 3
         size_thresh = 0.75
-        data_file_name = "tos-output"
-        
+        msq = str(size_thresh).split('.')[1]
+        data_file_name = "tos"
+         
     elif task == 2:
         data = ds
         radius = 1
         size_thresh = 0.75
-        data_file_name = "tos-output"
+        msq = str(size_thresh).split('.')[1]
+        data_file_name = "tos"
 
     elif task == 3:
         data = ds
         radius = 3
         size_thresh = 0.25
-        data_file_name = "tos-output"
+        msq = str(size_thresh).split('.')[1]
+        data_file_name = "tos"
 
     elif task == 4:
         data = climatology
         radius = 3
         size_thresh = 0.75
-        data_file_name = "climatology"
+        msq = str(size_thresh).split('.')[1]
+        data_file_name = "clim"
 
     elif task == 5:
         data = climatology
         radius = 1
         size_thresh = 0.75
-        data_file_name = "climatology"
+        msq = str(size_thresh).split('.')[1]
+        data_file_name = "clim"
 
     elif task == 6:
         data = climatology
         radius = 3
         size_thresh = 0.25
-        data_file_name = "climatology"
+        msq = str(size_thresh).split('.')[1]
+        data_file_name = "clim"
 
     for i in range(1, len_ds):
         print(f" TASK: {task}, iterations of each task: {i}/4, radius={radius}, min_size_quartile={size_thresh}, pulling data from {data_file_name}")
 
         hot_water = data.isel(time=slice(start, end)) > 29
+        print('defined hot_water')
         
         mask_ocean = 1 * np.ones(data.shape[1:]) * np.isfinite(data.isel(time=0))
         mask_land = 0 * np.ones(data.shape[1:]) * np.isnan(data.isel(time=0))
         mask = mask_ocean + mask_land
+        print('defined mask')
 
         print(f"Tracker = ocetrac.Tracker(hot_water, mask, radius={radius}, min_size_quartile={size_thresh},timedim='time', xdim='xh', ydim='yh', positive=True)")
         Tracker = ocetrac.Tracker(hot_water, mask, radius=radius, min_size_quartile=size_thresh, timedim='time', xdim='xh', ydim='yh', positive=True)                              
         blobs = Tracker.track()
         print('Blobs tracked')
 
-        # Format the start and end dates for naming the output file
         d = data['time'].isel(time=start).time.dt
         e = data['time'].isel(time=end).time.dt
         date_d = f"{d.year.values:0004}-{d.month.values:02}-{d.day.values:02}"
@@ -86,8 +93,8 @@ while task <=6:
         print(date_d)
         print(date_e)
 
-        print(f"blobs.to_netcdf(f'{save_path}/ocetrac-v4-blobs-{data_file_name}-{date_d}-{date_e}.nc', mode='w')")
-        blobs.to_netcdf(f'{save_path}/ocetrac-v4-blobs-{data_file_name}-{date_d}-{date_e}.nc', mode='w')
+        print(f"blobs.to_netcdf(f'{save_path}/ocetracv4/ocetrac-v4-blobs-{data_file_name}-t{task}-i{i}-r{radius}-msq{msq}-{date_d}-{date_e}.nc', mode='w')")
+        blobs.to_netcdf(f'{save_path}/ocetracv4/ocetrac-v4-blobs-{data_file_name}-t{task}-i{i}-r{radius}-msq{msq}-{date_d}-{date_e}.nc', mode='w')
         print('Saved NetCDF')
         
         start += 365

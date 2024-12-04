@@ -32,37 +32,43 @@ while task <=6:
         data = ds
         radius = 3
         size_thresh = 0.75
-        data_file_name = "tos-output"
+        msq = str(size_thresh).split('.')[1]
+        data_file_name = "tos"
         
     elif task == 2:
         data = ds
         radius = 1
         size_thresh = 0.75
-        data_file_name = "tos-output"
+        msq = str(size_thresh).split('.')[1]
+        data_file_name = "tos"
 
     elif task == 3:
         data = ds
         radius = 3
         size_thresh = 0.25
-        data_file_name = "tos-output"
+        msq = str(size_thresh).split('.')[1]
+        data_file_name = "tos"
 
     elif task == 4:
         data = climatology
         radius = 3
         size_thresh = 0.75
-        data_file_name = "climatology"
+        msq = str(size_thresh).split('.')[1]
+        data_file_name = "clim"
 
     elif task == 5:
         data = climatology
         radius = 1
         size_thresh = 0.75
-        data_file_name = "climatology"
+        msq = str(size_thresh).split('.')[1]
+        data_file_name = "clim"
 
     elif task == 6:
         data = climatology
         radius = 3
         size_thresh = 0.25
-        data_file_name = "climatology"
+        msq = str(size_thresh).split('.')[1]
+        data_file_name = "clim"
 
     for i in range(1, len_ds):
         print(f" TASK: {task}, iterations of each task: {i}/4, radius={radius}, min_size_quartile={size_thresh}, pulling data from {data_file_name}")
@@ -86,12 +92,13 @@ while task <=6:
         print(date_d)
         print(date_e)
 
-        print(f"blobs.to_netcdf(f'{save_path}/ocetrac-v4-blobs-{data_file_name}-{date_d}-{date_e}.nc', mode='w')")
+        print(f"blobs.to_netcdf(f'{save_path}/ocetrac-v4-blobs-{data_file_name}-t{task}-i{i}-r{radius}-msq{msq}-{date_d}-{date_e}.nc', mode='w')")
         #blobs.to_netcdf(f'{save_path}/ocetrac-v4-blobs-{data_file_name}-{date_d}-{date_e}.nc', mode='w')
         print('Saved NetCDF')
         
         start += 365
         end += 365
+
 
     start = initial_start
     print(start)
