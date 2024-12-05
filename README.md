@@ -11,7 +11,7 @@ The MHW-WMT project starts in `notebooks`:
 
 [02_run-ocetrac-v6.py](https://github.com/marianatorres4/WarmWaterMasses/blob/main/notebooks/02_run-ocetrac-v6.py "02_run-ocetrac-v6.py") : Runs ocetrac v6 (`min_size_quartile=0`, and `radius=1`) and can be modified to run different `tasks`
 
-[02_test-ocetrac-v5.py](https://github.com/marianatorres4/WarmWaterMasses/blob/main/notebooks/02_test-ocetrac-v5.py "02_test-ocetrac-v5.py"): Pretty much the same as `02_run_ocetrac-v5.py` but with a bunch of print statements to verify. It doesn't actually pass the `Tracker.track()` method
+[02_test-ocetrac-v5.py](https://github.com/marianatorres4/WarmWaterMasses/blob/main/notebooks/02_test-ocetrac-v5.py "02_test-ocetrac-v5.py"): Pretty much the same as `02_run_ocetrac-v6.py` but with a bunch of print statements to verify. It doesn't actually pass the `Tracker.track()` method
 
 [03_relabel-ocetrac-v6-output.ipynb](https://github.com/marianatorres4/WarmWaterMasses/blob/main/notebooks/03_relabel-ocetrac-v6-output.ipynb "03_relabel-ocetrac-v6-output.ipynb"): Here the ocetrac output is relabeled and saved out as an `.nc` file. 
 
