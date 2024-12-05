@@ -19,11 +19,10 @@ snap = xr.open_mfdataset(f"{hfdrake_path}/*.ocean_daily_snap*.nc", chunks={"time
 static = xr.open_dataset("/pub/hfdrake/datasets/CM4_MHW_blobs/data/WMT_monthly/ocean_month_rho2.static.nc")#chunks={'time':1})
 print("...loaded ds, snap, static")
 
-print("loading labels,df...")
 mt_path = "/pub/mariant3/WarmWaterMasses/data/"
-labels = xr.open_dataset(f"{mt_path}ocetracv5/ocetrac-v5-processed/ocetrac-v5-blobs-tos-t1-r3-msq75-01860315-01891101-manso.nc").blobs.rename('event_mask')
-df = pd.read_pickle(f"{mt_path}ocetracv5/ocetrac-v5-processed/ocetrac-v5-blobs-tos-t1-df-r3-msq75-01860315-01891101-manso.pkl")
-print("...loaded labels,df")
+labels = xr.open_dataset(f"{mt_path}ocetracv6/ocetrac-v6-processed/ocetrac-v6-blobs-tos-t1-r1-msq0-01860315-01891214-manso.nc").blobs.rename('event_mask')
+
+print("...loaded labels")
 
 #Merge snapshots with time-averages
 snap = snap.rename({
@@ -31,16 +30,19 @@ snap = snap.rename({
     **{v: f"{v}_bounds" for v in snap.data_vars}
     })
 
+#Get rid of one_day_ids
 ids = np.unique(labels)
 ids = np.array([id for id in ids if ~np.isnan(id)])
-one_day_ids = df[df['duration'] == 1]['id'].tolist()
-# Remove ids from the original labels array
+print(len(ids))
+one_day_ids = [mhw for mhw in ids if len(labels.where(labels == mhw, drop=True).time) == 1]
+print(len(one_day_ids))
 ids = np.array([id for id in ids if id not in one_day_ids])
+print(len(ids))
 
 #for all events
-for mhw in ids[18:]:
+for mhw in ids:
     print(f'...Working on event {mhw}')
-    mhw_df = df.loc[df.id==mhw]
+
     print('----------------- starting cumulative mask part -----------------')
     
     event = (labels == mhw).any("time")
@@ -121,9 +123,9 @@ for mhw in ids[18:]:
         wmtcalc = wmb.wmt
         wmtcalc
     
-    start_event_date = str(mhw_df['date'].values[0][0])
+    start_event_date = labels.where(labels==mhw,drop=True).time.values[0]
     start_event = wmtcalc.get_index("time").get_loc(f"{start_event_date}").start
-    end_event_date = str(mhw_df['date'].values[0][-1])
+    end_event_date = labels.where(labels==mhw,drop=True).time.values[-1]
     end_event = wmtcalc.get_index("time").get_loc(f"{end_event_date}").start
     
     print(f'Event {mhw} starts on {start_event_date} index={start_event} and ends on {end_event_date},index={end_event}')
@@ -141,5 +143,5 @@ for mhw in ids[18:]:
     print('done with wmt_event.load()')
     
     print('saving...')
-    wmt_mhw_event_full.to_netcdf(f'/pub/mariant3/WarmWaterMasses/data/ocetracv5/ocetrac-v5-processed/ocetrac-v5-t1-v2-ind-event-budget-{int(mhw)}-{start_event_date}-{end_event_date}.nc', mode='w')
+    wmt_mhw_event_full.to_netcdf(f'/pub/mariant3/WarmWaterMasses/data/ocetracv6/ocetrac-v6-processed/ocetrac-v6-t1-ind-event-budget-{int(mhw)}-{start_event_date}-{end_event_date}.nc', mode='w')
     print(f'Saved mhw #{int(mhw)}!!')
