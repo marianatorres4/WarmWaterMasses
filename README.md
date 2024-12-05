@@ -1,7 +1,7 @@
 # WarmWaterMasses
 
 ## the MHW-WMT workflow 
-last update: 12/24 (ignore the scripts folder for now)
+last update: 12/24 (ignore the `scripts` folder for now)
 
 The MHW-WMT project starts in notebooks:
 
