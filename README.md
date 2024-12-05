@@ -1,4 +1,4 @@
-# WarmWaterMasses 🌊
+# WarmWaterMasses 🌊🌡️
 
 ## the MHW-WMT workflow 
 last update: 12/24 (ignore the `scripts` folder for now)
