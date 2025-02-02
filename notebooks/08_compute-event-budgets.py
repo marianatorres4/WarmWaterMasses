@@ -123,9 +123,9 @@ for mhw in ids:
         wmtcalc = wmb.wmt
         wmtcalc
     
-    start_event_date = labels.where(labels==mhw,drop=True).time.values[0]
+    start_event_date = labels.where(labels==mhw,drop=True).time.values.astype('datetime64[D]')[0]
     start_event = wmtcalc.get_index("time").get_loc(f"{start_event_date}").start
-    end_event_date = labels.where(labels==mhw,drop=True).time.values[-1]
+    end_event_date = labels.where(labels==mhw,drop=True).time.values.astype('datetime64[D]')[-1]
     end_event = wmtcalc.get_index("time").get_loc(f"{end_event_date}").start
     
     print(f'Event {mhw} starts on {start_event_date} index={start_event} and ends on {end_event_date},index={end_event}')
