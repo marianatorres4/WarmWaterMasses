@@ -12,7 +12,8 @@ wmt = xr.open_dataset(
 ).sel(time=slice("0186","0189"))
 
 dsnovar = xr.Dataset(wmt.coords)
-path = glob.glob('/pub/mariant3/WarmWaterMasses/data/budgets/7day_rolling_budgets/event-7d-roll-budget_id-*.nc')
+
+path = glob.glob('/pub/mariant3/WarmWaterMasses/data/budgets/cumulative_mask_budgets/event-cumu-budget_id-*.nc')
 path = sorted(path, key=lambda p: int(re.search(r'id-(\d+)_', p).group(1)))
 
 mhwdataset = []
@@ -31,4 +32,4 @@ for files in path:
     
 mhwdataset = xr.concat(mhwdataset, dim='mhw')
 
-mhwdataset.to_netcdf("/pub/mariant3/WarmWaterMasses/data/budgets/7day_rolling_budgets/yearly-mhw-wmt-budgets-7d-rolling-mask_0186-0189.nc", mode='w')
+mhwdataset.to_netcdf("/pub/mariant3/WarmWaterMasses/data/budgets/cumulative_mask_budgets/yearly-mhw-wmt-budgets-cumu-mask_0186-0189.nc", mode='w')

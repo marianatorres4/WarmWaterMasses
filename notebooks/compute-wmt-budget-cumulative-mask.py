@@ -1,3 +1,4 @@
+print('load libraries')
 import datetime
 import xarray as xr
 import numpy as np
@@ -33,11 +34,9 @@ print("...loaded ds, snap, static")
 
 for year in np.unique(ds.time.dt.year.values):
     print("loading labels")
-    
     mt_path = "/pub/mariant3/WarmWaterMasses/data/"
-    labels = (xr.open_dataset(
-        f"{mt_path}ocetracv9/ocetrac-v9-blobs-tos-t1-r1-msq0-01860315-01891214-region.nc").sel(
-        time=slice(f"0{year}", f"0{year}")).blobs.rename("event_mask"))
+    
+    labels = (xr.open_dataset(f"{mt_path}ocetracv9/ocetrac-v9-blobs-tos-t1-r1-msq0-01860315-01891214-region.nc").sel(time=slice(f"0{year}", f"0{year}")).blobs.rename("event_mask"))
     
     print("loaded labels and renamed to event_mask")
 
@@ -55,22 +54,21 @@ for year in np.unique(ds.time.dt.year.values):
         # Zoom in on time period of event (+ 1 day before and 1 day after)
         # event_times = event_mask.time[event_mask.any(["xh", "yh"]).compute()]
         event_times = event_mask.time[event_mask.any(["xh", "yh"]).compute()]
-
-        window_size = min(7, len(event_times))
         
         event_mask = event_mask.sel(time=slice(
             event_times[ 0],
             event_times[-1],
         ))
-        print('----------------- creating a 7-day dynamic mask -----------------')
+        print('----------------- creating a 3-day dynamic mask -----------------')
         
-        # Create centered 7-day rolling cumulative mask
+        # Create centered 3-day rolling cumulative mask
         event_mask = (
-            event_mask.rolling({"time":window_size}, min_periods=1, center=True)
-            .max("time")
+            event_mask.any("time")
             .fillna(0.)
             .astype("float64")
         )
+        
+        event_mask, _ = xr.broadcast(event_mask, event_times)
 
         print('----------------- merging and realigning-----------------')
         
@@ -187,21 +185,21 @@ for year in np.unique(ds.time.dt.year.values):
             )
             
         print('----------------- getting ready to define wmt -----------------')
+        
         wmt = xr.concat([
-            _calc_temperature_wmt(sel_times(ds_event, t)).drop_dims("time_bounds")
-            for t in ds_event.time], dim="time")
+            _calc_temperature_wmt(sel_times(ds_event, t)).drop_dims(["time_bounds"])
+            for t in ds_event.time
+            ], dim="time")
         
         start = wmt.time.values.astype('datetime64[D]')[0]
         end = wmt.time.values.astype('datetime64[D]')[-1]
         print(f'Event {mhw} starts on {start} and ends on {end}')
         print(wmt.time.values)
-        
+
         print('----------------- getting ready to load wmt -----------------')
         wmt.load()
         print('-----------------loaded wmt -----------------')
         print('saving nc file...')
-        
-        print(f"wmt_mhw_event_full.to_netcdf(f'/pub/mariant3/WarmWaterMasses/data/budgets/7day_rolling_budgets/event-7d-roll-budget_id-{int(mhw)}-{start}-{end}.nc'), mode='w'")
-        
-        wmt.to_netcdf(f'/pub/mariant3/WarmWaterMasses/data/budgets/7day_rolling_budgets/event-7d-roll-budget_id-{int(mhw)}_{start}-{end}.nc', mode='w')
+        print(f"wmt_mhw_event_full.to_netcdf(f'/pub/mariant3/WarmWaterMasses/data/budgets/cumulative_mask_budgets/event-cumu-budget_id-{int(mhw)}-{start}-{end}.nc'), mode='w'")
+        wmt.to_netcdf(f'/pub/mariant3/WarmWaterMasses/data/budgets/cumulative_mask_budgets/event-cumu-budget_id-{int(mhw)}_{start}-{end}.nc', mode='w')
         print(f'...saved nc file for mhw {mhw}!')
