@@ -13,3 +13,5 @@ This repo contains the code to compute high-frequency water mass transformation 
 - [07_plotDuration-intesity.ipynb](https://github.com/marianatorres4/WarmWaterMasses/blob/main/notebooks/07_plotDuration-intesity.ipynb) and [08_plotMetrics-timeseries.ipynb](https://github.com/marianatorres4/WarmWaterMasses/blob/main/notebooks/08_plotMetrics-timeseries.ipynb)both plot the metrics. 
 - [09_compute-wmt-budget-7day-rolling-mask.py](https://github.com/marianatorres4/WarmWaterMasses/blob/main/scripts/09_compute-wmt-budget-7day-rolling-mask.py): is used to compute 7-day dynamic budgets for each MHW tracked. 
 - Finally we use [13_plotWWMT.ipynb](https://github.com/marianatorres4/WarmWaterMasses/blob/main/notebooks/13_plotWWMT.ipynb) for the WMT budget analysis.
+
+Available here: [![DOI](https://zenodo.org/badge/763793093.svg)](https://doi.org/10.5281/zenodo.20804905)
