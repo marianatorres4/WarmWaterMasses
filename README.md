@@ -2,7 +2,7 @@
 
 This repo contains the code to compute high-frequency water mass transformation (WMT) budgets for individually tracked marine heatwaves.
 
-![Warm Water Mass Transformation Workflow](figures/WWMWFv11-1.png)
+![Warm Water Mass Transformation Workflow](figures/WWMWFv11.png)
 
 -  [01_eulerainDetection.ipynb](https://github.com/marianatorres4/WarmWaterMasses/blob/main/notebooks/01_eulerainDetection.ipynb): We start here by load the CM4 (NOAA GFDL) data from a 100-year pre-industrial experiment. Initial MHW detection is using an Eulerian approach. 
 - [02_runOcetracv9.py](https://github.com/marianatorres4/WarmWaterMasses/blob/main/scripts/02_runOcetracv9.py): is a script used to run the tracker for the four years. The script is set up to run different configurations of ocetrac for our sensitivity analysis. The final analysis uses the ocetrac output with `min_size_quartile` and `radius` set to `0`. 
